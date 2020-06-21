@@ -1,5 +1,7 @@
 package grakn.core.cli;
 
+import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -15,7 +17,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-@Command(name = "upgrade")
+@Command(name = "upgrade", description = "Upgrades a Grakn component.")
 public class UpgradeComponent implements Callable<Integer> {
 
     private static final String REPO_TEMPLATE =
@@ -32,8 +34,16 @@ public class UpgradeComponent implements Callable<Integer> {
     @Parameters(index = "0", description = "Component to upgrade.")
     String componentToUpgrade;
 
-    @Option(names = {"-V", "--version"}, required = true, description = "The version to upgrade to.")
-    String version;
+    @ArgGroup(multiplicity = "1")
+    UpgradeFrom upgradeFrom;
+
+    static class UpgradeFrom {
+        @Option(names = {"-V", "--version"}, description = "The version to download and upgrade to.")
+        String version;
+
+        @Option(names = {"-a", "--archive"}, description = "A local path to a tar.gz to upgrade from.")
+        Path path;
+    }
 
     @Override
     public Integer call() throws Exception {
@@ -46,12 +56,17 @@ public class UpgradeComponent implements Callable<Integer> {
             return 1;
         }
 
-        URL url = generateDownloadURL(availableComponent);
-        Path downloadPath = downloadDir.resolve(replaceVars(DOWNLOAD_PATH_TEMPLATE, availableComponent));
+        Path downloadPath;
+        if (upgradeFrom.version != null) {
+            URL url = generateDownloadURL(availableComponent);
+            downloadPath = downloadDir.resolve(replaceVars(DOWNLOAD_PATH_TEMPLATE, availableComponent));
 
-        System.out.println("Downloading " + url.toString() + " ...");
-        GraknFileManager.download(url, downloadPath);
-        System.out.println("Downloading complete.");
+            System.out.println("Downloading " + url.toString() + " ...");
+            GraknFileManager.download(url, downloadPath);
+            System.out.println("Downloading complete.");
+        } else {
+            downloadPath = upgradeFrom.path;
+        }
 
         Path componentPath = graknHome.resolve(componentToUpgrade);
         Path backupPath = graknHome.resolve(componentToUpgrade + "-BAK");
@@ -68,11 +83,13 @@ public class UpgradeComponent implements Callable<Integer> {
                 .map(Path::toFile)
                 .forEach(File::delete);
 
-        // Delete temporary download and dirs by backwards recursion through the path
-        Path backwardsPath = downloadPath;
-        while (!backwardsPath.equals(downloadDir) && backwardsPath.getNameCount() > 0) {
-            Files.delete(backwardsPath);
-            backwardsPath = backwardsPath.getParent();
+        if (upgradeFrom.version != null) {
+            // Delete temporary download and dirs by backwards recursion through the path
+            Path backwardsPath = downloadPath;
+            while (!backwardsPath.equals(downloadDir) && backwardsPath.getNameCount() > 0) {
+                Files.delete(backwardsPath);
+                backwardsPath = backwardsPath.getParent();
+            }
         }
 
         return 0;
@@ -86,7 +103,7 @@ public class UpgradeComponent implements Callable<Integer> {
         return path
                 .replace("{group-name}", component.getComponentDistributionGroup())
                 .replace("{artifact-name}", component.getComponentDistributionArtifact())
-                .replace("{version}", version);
+                .replace("{version}", upgradeFrom.version);
     }
 
     private GraknComponentDefinition getAvailableComponent() {
