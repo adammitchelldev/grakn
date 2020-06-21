@@ -32,6 +32,7 @@ assemble_targz(
                "@graknlabs_console//file",
                "@graknlabs_common//bin:assemble-bash-targz"],
     additional_files = {
+        "//cli:conf/logback.xml": "cli/conf/logback.xml",
         "//server:conf/logback.xml": "server/conf/logback.xml",
 #        "@graknlabs_console//config/logback:logback.xml": "console/conf/logback.xml",
         "//server:conf/grakn.properties": "server/conf/grakn.properties",

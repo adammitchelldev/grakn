@@ -16,6 +16,7 @@ import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.zip.GZIPInputStream;
 
 public class GraknFileManager {
@@ -46,6 +47,15 @@ public class GraknFileManager {
                 IOUtils.copy(inputStream, outputFileStream);
                 outputFileStream.close();
             }
+        }
+    }
+
+    public static void recursiveDeleteIfExists(Path path) throws IOException {
+        if (Files.exists(path)) {
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
         }
     }
 

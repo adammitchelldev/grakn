@@ -1,5 +1,6 @@
 package grakn.core.cli;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,8 +76,13 @@ public class GraknComponentLoader {
 
     public URL getCommandJarURL(GraknComponent component) {
         try {
-            return getLibPath(component).resolve(component.getJarName()).toUri().toURL();
-        } catch (MalformedURLException e) {
+            Path path = Files.find(getLibPath(component), 1,
+                    (a, b) -> a.getFileName().toString().startsWith(component.getJarName()))
+                    .findFirst().orElseThrow(() -> new FileNotFoundException("Jar starting with " +
+                            component.getJarName() + " not found."));
+
+            return path.toUri().toURL();
+        } catch (IOException e) {
             throw new GraknComponentLoaderException(e);
         }
     }

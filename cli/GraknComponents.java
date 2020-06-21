@@ -4,7 +4,7 @@ public class GraknComponents {
     public static final GraknComponentDefinition SERVER = new GraknComponentDefinition(
             "server",
             "grakn.core.daemon.GraknDaemon",
-            "io-grakn-core-grakn-daemon-0.0.0.jar",
+            "io-grakn-core-grakn-daemon",
             "none",
             "none"
     );
@@ -12,7 +12,7 @@ public class GraknComponents {
     public static final GraknComponentDefinition CONSOLE = new GraknComponentDefinition(
             "console",
             "grakn.console.GraknConsole",
-            "io-grakn-console-grakn-console-0.0.0.jar",
+            "io-grakn-console-grakn-console",
             "console-deps",
             "graknlabs_console"
     );
