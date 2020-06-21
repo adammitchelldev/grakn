@@ -15,6 +15,7 @@ java_library(
 #        "//daemon:daemon",
 #        "//server:server",
         "//dependencies/maven/artifacts/info/picocli:picocli",
+        "//dependencies/maven/artifacts/org/apache/commons:commons-compress",
 #        "@graknlabs_console//:console",
     ],
     runtime_deps = [

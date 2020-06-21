@@ -73,13 +73,14 @@ public class GraknCli {
         CommandLine commandLine = new CommandLine(new GraknCli());
 
         // TODO Make this runtime configurable! We can load pretty much anything we like here.
-        loader.load(new GraknComponentDefinition("server", "grakn.core.daemon.GraknDaemon", "io-grakn-core-grakn-daemon-0.0.0.jar"));
-        loader.load(new GraknComponentDefinition("console", "grakn.console.GraknConsole", "io-grakn-console-grakn-console-0.0.0.jar"));
+        loader.load(Components.SERVER);
+        loader.load(Components.CONSOLE);
 
         loader.getComponents().forEach(component ->
                 commandLine.addSubcommand(component.getCommand()));
 
         System.exit(commandLine
+                .addSubcommand(new CommandLine(new UpgradeComponent(Components.AVAILABLE_COMPONENTS)))
                 .addSubcommand(Community.class)
                 .addSubcommand(CommandLine.HelpCommand.class)
                 .setColorScheme(COLOR_SCHEME)

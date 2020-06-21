@@ -161,6 +161,9 @@ dependencies:
     commons-math3:
       version: "3.6.1"
       lang: java
+    commons-compress:
+      version: "1.20"
+      lang: java
 
   org.apache.thrift:
     libthrift:

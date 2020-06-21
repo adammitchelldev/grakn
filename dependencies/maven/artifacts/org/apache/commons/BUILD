@@ -4,7 +4,7 @@ java_library(
         "//external:jar/org/apache/commons/commons-compress"
     ],
     visibility = [
-        "//dependencies/maven/artifacts:__subpackages__"
+        "//visibility:public"
     ]
 )
 
