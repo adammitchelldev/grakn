@@ -2,11 +2,11 @@ package(default_visibility = ["@graknlabs_grakn_core//__subpackages__"])
 
 load("@graknlabs_bazel_distribution//common:rules.bzl", "java_deps")
 
-alias(
-    name = "conf/logback.xml",
-    actual = "@graknlabs_console//config/logback:logback.xml",
-    visibility = ["//:__pkg__"],
-)
+#alias(
+#    name = "conf/logback.xml",
+#    actual = "@graknlabs_console//config/logback:logback.xml",
+#    visibility = ["//:__pkg__"],
+#)
 
 java_library(
     name = "cli",

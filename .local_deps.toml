@@ -1,0 +1,5 @@
+[local_repositories]
+graknlabs_common = "../common"
+
+[http_files]
+graknlabs_console = ["../console", "//:console-deps"]

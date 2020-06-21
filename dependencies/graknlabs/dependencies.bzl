@@ -16,6 +16,7 @@
 #
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 def graknlabs_build_tools():
     git_repository(
@@ -53,10 +54,14 @@ def graknlabs_client_java():
     )
 
 def graknlabs_console():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_console",
+#        remote = "https://github.com/graknlabs/console",
+#        tag = "1.0.6", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_console
+#    )
+    http_file(
         name = "graknlabs_console",
-        remote = "https://github.com/graknlabs/console",
-        tag = "1.0.6", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_console
+        urls = ["https://repo.grakn.ai/repository/distribution-snapshot/graknlabs_console/console-deps/3686b81b8d453333b0625437d3eb8889925d1332/console-deps-3686b81b8d453333b0625437d3eb8889925d1332.tgz"],
     )
 
 def graknlabs_simulation():
