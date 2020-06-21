@@ -70,14 +70,14 @@ public class Server {
         return Grakn.class;
     }
 
-    public void startIfNotRunning(List<String> args) {
+    public void startIfNotRunning(List<String> args, boolean join) {
         boolean isProcessRunning = executor.isProcessRunning(SERVER_PIDFILE);
         boolean isGraknProcess = executor.isAGraknProcess(SERVER_PIDFILE, Grakn.class.getName());
 
         if (isProcessRunning && isGraknProcess) {
             System.out.println(DISPLAY_NAME + " is already running");
         } else {
-            start(args);
+            start(args, join);
         }
     }
 
@@ -109,7 +109,7 @@ public class Server {
         return executor.isProcessRunning(SERVER_PIDFILE);
     }
 
-    private void start(List<String> args) {
+    private void start(List<String> args, boolean join) {
         System.out.print("Starting " + DISPLAY_NAME + "...");
         System.out.flush();
 
@@ -126,6 +126,17 @@ public class Server {
 
             if (executor.isProcessRunning(SERVER_PIDFILE) && isServerReady(host, port)) {
                 System.out.println("SUCCESS");
+
+                if (join) {
+                    try {
+                        startServerAsync.get();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new GraknDaemonException(e.getMessage(), e);
+                    } catch (ExecutionException e) {
+                        throw new GraknDaemonException(e.getMessage(), e);
+                    }
+                }
                 return;
             }
             try {

@@ -198,17 +198,20 @@ public class GraknDaemon {
             @Parameters(hidden = true)
             List<String> args = Collections.emptyList();
 
+            @Option(names = {"-w", "--wait"}, hidden = true)
+            boolean wait;
+
             @Override
             public void run() {
                 GraknDaemon daemon = new GraknDaemon(parent.showLogo);
                 daemon.storageExecutor.startIfNotRunning();
-                daemon.serverExecutor.startIfNotRunning(args);
+                daemon.serverExecutor.startIfNotRunning(args, wait);
             }
 
             @Command(description = "Start the Grakn main server only")
             public void server(@Parameters(hidden = true) List<String> args) {
                 GraknDaemon daemon = new GraknDaemon(parent.showLogo);
-                daemon.serverExecutor.startIfNotRunning(args == null ? Collections.emptyList() : args);
+                daemon.serverExecutor.startIfNotRunning(args == null ? Collections.emptyList() : args, wait);
             }
 
             @Command(description = "Stop the Grakn main server")
