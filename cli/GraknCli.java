@@ -10,6 +10,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 /**
  * The main CLI for the `grakn` command.
@@ -32,6 +33,16 @@ public class GraknCli {
             hidden = true
     )
     boolean showComponentErrors = false;
+
+    @Command(name = "docs", description = "Access Grakn docs in your default browser.")
+    public static class Docs implements Callable<Integer> {
+
+        @Override
+        public Integer call() throws IOException {
+            Desktop.getDesktop().browse(URI.create("https://dev.grakn.ai"));
+            return 0;
+        }
+    }
 
     @Command(name = "community", description = "Get more from the Grakn community.")
     public static class Community {
@@ -73,14 +84,16 @@ public class GraknCli {
         CommandLine commandLine = new CommandLine(new GraknCli());
 
         // TODO Make this runtime configurable! We can load pretty much anything we like here.
-        loader.load(Components.SERVER);
-        loader.load(Components.CONSOLE);
+        // We should have a downloadable list of available components and more concretely detect locally installed ones.
+        loader.load(GraknComponents.SERVER);
+        loader.load(GraknComponents.CONSOLE);
 
         loader.getComponents().forEach(component ->
                 commandLine.addSubcommand(component.getCommand()));
 
         System.exit(commandLine
-                .addSubcommand(new CommandLine(new UpgradeComponent(Components.AVAILABLE_COMPONENTS)))
+                .addSubcommand(new CommandLine(new UpgradeComponent(GraknComponents.AVAILABLE_COMPONENTS)))
+                .addSubcommand(Docs.class)
                 .addSubcommand(Community.class)
                 .addSubcommand(CommandLine.HelpCommand.class)
                 .setColorScheme(COLOR_SCHEME)

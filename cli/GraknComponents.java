@@ -1,6 +1,6 @@
 package grakn.core.cli;
 
-public class Components {
+public class GraknComponents {
     public static final GraknComponentDefinition SERVER = new GraknComponentDefinition(
             "server",
             "grakn.core.daemon.GraknDaemon",
