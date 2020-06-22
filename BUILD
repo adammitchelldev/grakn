@@ -50,7 +50,7 @@ assemble_zip(
     name = "assemble-mac-zip",
     targets = ["//cli:cli-deps",
                "//server:server-deps",
-               "@graknlabs_console//file",
+               "@graknlabs_console_component//file",
                "@graknlabs_common//bin:assemble-bash-targz"],
     additional_files = {
         "//server:conf/logback.xml": "server/conf/logback.xml",
@@ -76,7 +76,7 @@ assemble_zip(
 assemble_zip(
     name = "assemble-windows-zip",
     targets = ["//server:server-deps",
-               "@graknlabs_console//file",
+               "@graknlabs_console_component//file",
                "@graknlabs_common//bin:assemble-bat-targz"],
     additional_files = {
         "//server:conf/logback.xml": "server/conf/logback.xml",
