@@ -37,7 +37,10 @@ public class GraknFileManager {
         TarArchiveEntry entry;
         while ((entry = inputStream.getNextTarEntry()) != null) {
             // Need to account for name repeated
-            Path path = Paths.get(entry.getName());
+            Path path = Paths.get(entry.getName()).normalize();
+            if (path.getNameCount() <= 1) {
+                continue; // Root and base component dirs can be ignored
+            }
             Path entryPath = to.resolve(path.subpath(1, path.getNameCount()));
             if (entry.isDirectory()) {
                 Files.createDirectories(entryPath);

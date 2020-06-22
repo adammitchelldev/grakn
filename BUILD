@@ -27,18 +27,11 @@ load("@io_bazel_rules_docker//contrib:push-all.bzl", "docker_push")
 
 assemble_targz(
     name = "assemble-linux-targz",
-    targets = ["//cli:cli-deps",
-               "//server:server-deps",
-               "@graknlabs_console//file",
+    targets = ["//cli:cli-component",
+               "//server:server-component",
+               "@graknlabs_console_component//file",
                "@graknlabs_common//bin:assemble-bash-targz"],
     additional_files = {
-        "//cli:conf/logback.xml": "cli/conf/logback.xml",
-        "//server:conf/logback.xml": "server/conf/logback.xml",
-#        "@graknlabs_console//config/logback:logback.xml": "console/conf/logback.xml",
-        "//server:conf/grakn.properties": "server/conf/grakn.properties",
-        "//server:services/cassandra/cassandra.yaml": "server/services/cassandra/cassandra.yaml",
-        "//server:services/cassandra/logback.xml": "server/services/cassandra/logback.xml",
-        "//server:services/grakn/grakn-core-ascii.txt": "server/services/grakn/grakn-core-ascii.txt",
         "//:LICENSE": "LICENSE",
         "//:README.md": "README.md",
     },

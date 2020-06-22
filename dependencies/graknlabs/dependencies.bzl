@@ -60,7 +60,7 @@ def graknlabs_console():
 #        tag = "1.0.6", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_console
 #    )
     http_file(
-        name = "graknlabs_console",
+        name = "graknlabs_console_component",
         urls = ["https://repo.grakn.ai/repository/distribution-snapshot/graknlabs_console/console-deps/3686b81b8d453333b0625437d3eb8889925d1332/console-deps-3686b81b8d453333b0625437d3eb8889925d1332.tgz"],
     )
 

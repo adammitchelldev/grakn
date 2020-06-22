@@ -1,21 +1,19 @@
 package(default_visibility = ["@graknlabs_grakn_core//__subpackages__"])
 
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@graknlabs_bazel_distribution//common:rules.bzl", "java_deps")
 
 exports_files(
     glob(["conf/**"]),
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
 )
 
 java_library(
     name = "cli",
     srcs = glob(["*.java"]),
     deps = [
-#        "//daemon:daemon",
-#        "//server:server",
         "//dependencies/maven/artifacts/info/picocli:picocli",
         "//dependencies/maven/artifacts/org/apache/commons:commons-compress",
-#        "@graknlabs_console//:console",
     ],
     runtime_deps = [
         "//dependencies/maven/artifacts/ch/qos/logback:logback-classic",
@@ -37,4 +35,14 @@ java_deps(
     java_deps_root = "cli/services/lib/",
     visibility = ["//:__pkg__"],
     maven_name = True,
+)
+
+pkg_tar(
+    name = "cli-component",
+    deps = [":cli-deps"],
+    files = {
+        "//cli:conf/logback.xml": "cli/conf/logback.xml",
+    },
+    extension = "tgz",
+    visibility = ["//visibility:public"],
 )

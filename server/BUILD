@@ -17,6 +17,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@graknlabs_bazel_distribution//apt:rules.bzl", "assemble_apt", "deploy_apt")
 load("@graknlabs_bazel_distribution//common:rules.bzl", "assemble_targz", "java_deps", "assemble_zip")
 load("@graknlabs_bazel_distribution//rpm:rules.bzl", "assemble_rpm", "deploy_rpm")
@@ -156,6 +157,20 @@ java_deps(
     java_deps_root = "server/services/lib/",
     visibility = ["//:__pkg__"],
     maven_name = True,
+)
+
+pkg_tar(
+    name = "server-component",
+    deps = [":server-deps"],
+    files = {
+        "//server:conf/logback.xml": "server/conf/logback.xml",
+        "//server:conf/grakn.properties": "server/conf/grakn.properties",
+        "//server:services/cassandra/cassandra.yaml": "server/services/cassandra/cassandra.yaml",
+        "//server:services/cassandra/logback.xml": "server/services/cassandra/logback.xml",
+        "//server:services/grakn/grakn-core-ascii.txt": "server/services/grakn/grakn-core-ascii.txt",
+    },
+    extension = "tgz",
+    visibility = ["//visibility:public"],
 )
 
 assemble_targz(
